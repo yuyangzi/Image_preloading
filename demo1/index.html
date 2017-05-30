@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片预加载之无序预加载</title>
+    <script src="../lib/jquery-3.2.1.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        /*页面加载区块*/
+        .loging {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: #eeeeee;
+        }
+
+        .loging p {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        /*图片盒子区块*/
+        .box {
+            text-align: center;
+        }
+
+        img {
+            width: 1200px;
+        }
+
+        p {
+            text-align: center;
+        }
+
+        p a {
+            text-decoration: none;
+            display: inline-block;
+            padding: 0 10px;
+            border: 1px solid #000;
+        }
+
+        p a:hover {
+            background-color: #eeeeee;
+        }
+
+    </style>
+</head>
+<body>
+<div class="loging">
+    <p class="progress">页面加载中 <strong>0</strong>%</p>
+</div>
+
+<div class="box">
+    <img id="pic" src="http://www.bz55.com/uploads/allimg/110919/0T4113D4-0.jpg" alt="pic">
+    <p>
+        <a href="javascript:" class="btn" data-control="prev">上一页</a>
+        <a href="javascript:" class="btn" data-control="next">下一页</a>
+    </p>
+</div>
+
+
+<script src="js/proload.js"></script>
+<script>
+
+    /********定义模拟数据***********/
+    let imgs = [
+        "http://www.bz55.com/uploads/allimg/110919/0T4113D4-0.jpg",
+        "http://i2.17173cdn.com/i7mz64/YWxqaGBf/tu17173com/20150807/ztiRoKbjCdecppd.jpg",
+        "http://i2.17173cdn.com/i7mz64/YWxqaGBf/tu17173com/20150401/CUTdLEbjrzBiwqd.jpg",
+        "http://n.sinaimg.cn/games/3c3de2ce/20151214/22.jpg",
+        "http://img1.mydrivers.com/img/20150513/8a5e16183fc040cdadc81563eedbebcd.jpg",
+        "http://pic1.win4000.com/wallpaper/6/57d8e8d1721dd.jpg",
+        "http://i1.download.fd.pchome.net/g1/M00/0C/1A/ooYBAFR3z_yIAY8bAAcDcrzWPg4AACHfQFR-5AABwOK660.jpg",
+        "http://www.33lc.com/article/UploadPic/2012-10/201210611554338351.jpg"
+    ];
+
+    /********* 1 获取元素 *********/
+    let pic = document.querySelector(".pic");
+    let btns = document.querySelectorAll(".btn");
+    let loging = document.getElementsByClassName("loging")[0];
+    let strong = document.querySelector(".progress strong");
+
+    /********* 2 定义变量 *********/
+
+    let proload = new proLoad(imgs, {
+        each: function (count, len) {
+            strong.innerHTML = count / len * 100 | 0 + "%";
+        },
+        all: function () {
+            loging.style.display = "none";
+        }
+    });
+    proload.disorderlyLoad();
+
+    /********** 绑定事件 **********/
+    btns.onclick = function () {
+        if ("prve" === $(this).data('control')) {
+            index--;
+            index = index < 0 ? len - 1 : index;
+        }
+        else {
+            index++;
+            index = index > len - 1 ? 0 : index;
+        }
+
+        pic.setAttribute("src", imgs[index]);
+
+    }
+
+
+</script>
+</body>
+</html>
